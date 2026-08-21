@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "reactionpathway"
+version = "0.1.0"
+description = "Reaction pathway plotting utilities"
+requires-python = ">=3.8"
+authors = [{ name = "ReactionPathway contributors" }]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
