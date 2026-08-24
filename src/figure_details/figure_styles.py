@@ -1,70 +1,88 @@
 """
 This is a class for the parameters of styles in the plot for reaction pathways.
-The styles are about:
-1. The colors of the lines
-2. The width of the lines
-3. The length of each line representing a reactant, an intermediate, or a product
-4. The separation between the lines
-5. The type for plotting a transition state, can be either a line or a curve
-6. The switch to show the four borders or only the abssissa and the ordinate axes
-7. The height of the plot without the title and the labels
-8. The width of the plot without the title and the labels
-9. The size of the titles and the labels
-10. The font of the titles and the labels
-
 """
+
+key_with_positive_float_values = ['line_widths', 
+                                  'lm_line_length',
+                                  'ts_line_length',
+                                  'line_separation',
+                                  'plot_height', 
+                                  'plot_width', 
+                                  'general_text_size', 
+                                  'title_text_size', 
+                                  'axis_text_size', 
+                                  'species_text_size', 
+                                  'species_tilt_angle']
+key_with_str_list = ['line_colors']
+key_with_str_values = ['text_font',
+                       'ordinate_label',
+                       'abscissa_label',
+                       'title']
+key_with_bool_values = ['show_borders']
 
 class Styles:
     def __init__(self,
                  line_colors: list[str]=None,
                  line_widths: float=1.0,
-                 line_lengths: float=1.0,
+                 lm_line_length: float=1.0,
+                 ts_line_length: float=1.0,
                  line_separation: float=1.0,
-                 ts_type: str='line',
                  show_borders: bool=True,
                  plot_height: float=6.0,
                  plot_width: float=8.0,
-                 title_label_size: float=12.0,
-                 title_label_font: str='Times New Roman',
+                 plot_range: tuple[float, float]=None,
+                 interval: float=1.0,
+                 general_text_size: float=10.0,
+                 title_text_size: float=12.0,
+                 axis_text_size: float=10.0,
+                 species_text_size: float=10.0,
+                 text_font: str='Times New Roman',
+                 species_tilt_angle: float=0.0,
+                 ordinate_label: str='Reaction Energy (eV)',
+                 abscissa_label: str='Reaction Coordinate',
+                 title: str='Reaction Pathway'
                  ):
-        """
-        Parameters:
-        -----------
-        line_colors: list[str]
-            A list of colors for the lines in the plot. If None, default colors will be used.
-        line_widths: float
-            The width of the lines in the plot.
-        line_lengths: float
-            The length of each line representing a reactant, an intermediate, or a product.
-        line_separation: float
-            The separation between the lines in the plot.
-        ts_type: str
-            The type for plotting a transition state, can be either 'line' or 'curve'.
-        show_borders: bool
-            The switch to show the four borders or only the abssissa and the ordinate axes.
-        """
+
         self.line_colors = line_colors if line_colors is not None else ['blue', 'green', 'red']
         self.line_widths = line_widths
-        self.line_lengths = line_lengths
+        self.lm_line_length = lm_line_length
+        self.ts_line_length = ts_line_length
         self.line_separation = line_separation
-        self.ts_type = ts_type
         self.show_borders = show_borders
         self.plot_height = plot_height
         self.plot_width = plot_width
-        self.title_label_size = title_label_size
-        self.title_label_font = title_label_font
+        self.general_text_size = general_text_size
+        self.title_text_size = title_text_size
+        self.axis_text_size = axis_text_size
+        self.plot_range = plot_range
+        self.interval = interval
+        self.text_font = text_font
+        self.species_text_size = species_text_size
+        self.species_tilt_angle = species_tilt_angle
+        self.ordinate_label = ordinate_label
+        self.abscissa_label = abscissa_label
+        self.title = title
 
     def __repr__(self):
         return (f"Styles(line_colors={self.line_colors}, "
                 f"line_widths={self.line_widths}, "
-                f"line_lengths={self.line_lengths}, "
+                f"lm_line_length={self.lm_line_length}, "
+                f"ts_line_length={self.ts_line_length}, "
                 f"line_separation={self.line_separation}, "
-                f"ts_type='{self.ts_type}', "
                 f"show_borders={self.show_borders}, "
                 f"plot_height={self.plot_height}, "
                 f"plot_width={self.plot_width}, "
-                f"title_label_size={self.title_label_size}, "
-                f"title_label_font='{self.title_label_font}')")
+                f"general_text_size={self.general_text_size}, "
+                f"title_text_size={self.title_text_size}, "
+                f"axis_text_size={self.axis_text_size}, "
+                f"plot_range={self.plot_range}, "
+                f"interval={self.interval}, "
+                f"text_font='{self.text_font}', "
+                f"species_text_size={self.species_text_size}, "
+                f"species_tilt_angle={self.species_tilt_angle}, "
+                f"ordinate_label='{self.ordinate_label}', "
+                f"abscissa_label='{self.abscissa_label}', "
+                f"title='{self.title}')")
 
     def __setattr__(self, name, value):
         """
@@ -73,36 +91,21 @@ class Styles:
         This method is used to set the attributes of the Styles class. It also validates the input
         values for each attribute to ensure they meet the expected types and constraints.
         """
-        if name == 'line_colors':
+        if name in key_with_str_list:
             if not isinstance(value, list) or not all(isinstance(color, str) for color in value):
-                raise ValueError("line_colors must be a list of strings.")
-        elif name == 'line_widths':
+                raise ValueError(f"{name} must be a list of strings.")
+        elif name in key_with_positive_float_values:
             if not isinstance(value, (int, float)) or value <= 0:
-                raise ValueError("line_widths must be a positive number.")
-        elif name == 'line_lengths':
-            if not isinstance(value, (int, float)) or value <= 0:
-                raise ValueError("line_lengths must be a positive number.")
-        elif name == 'line_separation':
-            if not isinstance(value, (int, float)) or value <= 0:
-                raise ValueError("line_separation must be a positive number.")
-        elif name == 'ts_type':
-            if value not in ['line', 'curve']:
-                raise ValueError("ts_type must be either 'line' or 'curve'.")
-        elif name == 'show_borders':
+                raise ValueError(f"{name} must be a positive float.")
+        elif name in key_with_bool_values:
             if not isinstance(value, bool):
-                raise ValueError("show_borders must be a boolean.")
-        elif name == 'plot_height':
-            if not isinstance(value, (int, float)) or value <= 0:
-                raise ValueError("plot_height must be a positive number.")
-        elif name == 'plot_width':
-            if not isinstance(value, (int, float)) or value <= 0:
-                raise ValueError("plot_width must be a positive number.")
-        elif name == 'title_label_size':
-            if not isinstance(value, (int, float)) or value <= 0:
-                raise ValueError("title_label_size must be a positive number.")
-        elif name == 'title_label_font':
+                raise ValueError(f"{name} must be a boolean.")
+        elif name in key_with_str_values:
             if not isinstance(value, str):
-                raise ValueError("title_label_font must be a string.")
+                raise ValueError(f"{name} must be a string.")
+        else:
+            raise AttributeError(f"Unknown attribute: {name}")
+
         super().__setattr__(name, value)
 
 

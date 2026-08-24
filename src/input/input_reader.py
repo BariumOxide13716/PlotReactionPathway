@@ -7,8 +7,13 @@ the style of the plot, including line colors, widths, lengths, separation, and o
 The input file should also provide the data file for this code to read.
 
 """
+from figure_details.figure_styles import key_with_str_list, \
+                                         key_with_positive_float_values, \
+                                         key_with_bool_values, \
+                                         key_with_str_values
 import os
-def read_input_file(input_file_path):
+
+def input_reader(input_file_path):
     """
     Reads the input file and extracts the necessary information for plotting the reaction pathway.
 
@@ -35,9 +40,9 @@ def read_input_file(input_file_path):
                 continue  # Skip empty lines and comments
             key, value = line.split('=')
             input_data[key.strip()] = value.strip()
-    return process_input_data(input_data)
+    return input_data_processor(input_data)
 
-def process_input_data(input_data):
+def input_data_processor(input_data):
     """
     Processes the extracted input data and converts it into the appropriate types.
 
@@ -56,17 +61,19 @@ def process_input_data(input_data):
     """
     processed_data = {}
     for key, value in input_data.items():
-        if key == 'line_colors':
+        if key in key_with_str_list:
             processed_data[key] = [color.strip() for color in value.split(',')]
-        elif key in ['line_widths', 'line_lengths', 'line_separation', 'plot_height', 'plot_width', 'title_label_size']:
+        elif key in key_with_positive_float_values:
             processed_data[key] = float(value)
-        elif key == 'ts_type':
-            if value not in ['line', 'curve']:
-                raise ValueError("ts_type must be either 'line' or 'curve'.")
-            processed_data[key] = value
-        elif key == 'show_borders':
+        elif key in key_with_bool_values:
             processed_data[key] = value.lower() in ['true', '1', 'yes']
-        elif key == 'title_label_font':
+        elif key in key_with_str_values:
+            processed_data[key] = value
+        elif key == 'input_data_file':
+            assert os.path.isfile(value), f"Data file {value} does not exist."
+            assert value.endswith('.csv'), f"Data file {value} must be a CSV file."
+            processed_data[key] = value
+        elif key == 'output_plot_file':
             processed_data[key] = value
         else:
             raise ValueError(f"Unexpected key '{key}' in input data.")
