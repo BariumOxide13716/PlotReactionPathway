@@ -11,16 +11,20 @@ title=my_reaction_pathway
 
 # line styles
 # omitteid
-line_colors=blue
+line_colors=cyan
 
 # figure_styles
 # omitted
-plot_dimension = 10, 10
-plot_range = 0, 1
-interval = 0.2
+plot_size = 5 5
+plot_range = -0.5 1
+interval = 0.5
 
 # text styles
 #species_text_weight=bold
 text_font = DejaVu Serif
+species_tilt_angle = -30
+species_text_weight = bold
+species_text_ordinate = -0.05
+abscissa_label_ordinate = -0.4
 # data display styles
 # omitted

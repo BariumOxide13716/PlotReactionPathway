@@ -46,11 +46,25 @@ def pathway_plotter(line_data: dict,
 
 #   ---- Plot Styles ----
     # starting by creating the figure and axes
-    fig, ax = plt.subplots(figsize=(figure_styles['plot_size'][0], figure_styles['plot_size'][1]))
+    fig, ax = plt.subplots(figsize=(figure_styles['plot_size'][0], 
+                                    figure_styles['plot_size'][1]))
     # to set the range of the figure in the ordinate direction
-    ax.set_ylim(figure_styles['plot_range'][0], figure_styles['plot_range'][1])
-    # set the interval of the ticks in the ordinate direction to the nearest integer of the interval specified in the figure_styles
-    ax.yaxis.set_ticks([i for i in range(int(figure_styles['plot_range'][0]), int(figure_styles['plot_range'][1]) + 1, int(figure_styles['interval']))])
+    ax.set_ylim(figure_styles['plot_range'][0],
+                figure_styles['plot_range'][1])
+
+
+    # set the interval of the ticks starting 
+    # from the nearest integer of the minimum of the plot range 
+    #   to the nearest integer of the maximum of the plot range
+    # and the ticks are on the right-hand side of the ordinate axis
+    n_ticks = int((figure_styles['plot_range'][1] - \
+                   figure_styles['plot_range'][0]) / \
+                   figure_styles['interval']) + 1
+    ax.tick_params(direction="in", left=True)
+    ax.yaxis.set_ticks([figure_styles['plot_range'][0] + \
+                        i * figure_styles['interval'] \
+                        for i in range(n_ticks)])
+
     # set the figure to show only the left and bottom boarders if show_boarders is set to False
     if not figure_styles['show_all_borders']:
         ax.spines['top'].set_visible(False)
@@ -65,13 +79,18 @@ def pathway_plotter(line_data: dict,
 
 #   ---- Texts ----
     # set the ordinate label, abscissa label, and title as specified in texts
-    labelpad=text_styles['abscissa_label_ordinate']
+
     if texts['ordinate_label'] is not None:
         ax.set_ylabel(texts['ordinate_label'], 
-                      fontsize=text_styles['axis_text_size'])
+                      fontsize=text_styles['axis_text_size'],
+                      fontweight=text_styles.get('label_text_weight', 'normal'))
     if texts['abscissa_label'] is not None:
+        ax.xaxis.set_label_coords(0.5, 
+                                  text_styles['abscissa_label_ordinate'] + \
+                                  figure_styles['plot_range'][0])
         ax.set_xlabel(texts['abscissa_label'], 
-                      fontsize=text_styles['axis_text_size'])
+                      fontsize=text_styles['axis_text_size'],
+                      fontweight=text_styles.get('label_text_weight', 'normal'))
     if texts['title'] is not None:
         ax.set_title(texts['title'], fontsize=text_styles['title_text_size'])
 
@@ -126,9 +145,10 @@ def pathway_plotter(line_data: dict,
         ax.text(line_data['abscissa_starting_points'][i],
                 text_styles['species_text_ordinate'] + figure_styles['plot_range'][0],
                 species_names,
-                fontfamily=text_styles['text_font'],
-                fontsize=text_styles['species_text_size'],
-                rotation=data_display_styles['species_tilt_angle'],
+                fontfamily=text_styles.get('text_font', 'Arial'),
+                fontsize=text_styles.get('species_text_size', 10.0),
+                fontweight=text_styles.get('species_text_weight', 'normal'),
+                rotation=data_display_styles.get('species_tilt_angle', 0.0),
                 ha='left',
                 va='top')
 

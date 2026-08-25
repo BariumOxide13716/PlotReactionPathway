@@ -1,11 +1,13 @@
-from figure_details.figure_styles import Styles
 from input.input_reader import input_reader
 from data_processor.data_reader import data_reader
 from data_processor.plot_data_generator import plot_data_generator
 from plot.pathway_plotter import pathway_plotter
 
 import sys
-
+"""
+This script is the main entry point for the program. 
+It reads an input file, processes the data, and generates a plot based on the extracted information.
+"""
 
 def main():
 

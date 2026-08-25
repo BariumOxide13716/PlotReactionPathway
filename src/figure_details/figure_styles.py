@@ -11,14 +11,20 @@ key_with_positive_float_values = [
                                   'species_text_size',
                                   'lm_line_length', 
                                   'ts_line_length', 
-                                  'line_separation', 
-                                  'species_tilt_angle',
-                                  'species_text_ordinate',
-                                  'abscissa_label_ordinate'
+                                  'line_separation'
                                   ]
-key_with_bool_values = ['show_all_borders']
-key_with_str_values = ['text_font']
-key_with_float_list_values = [ 'line_widths'
+key_with_float_values = [
+                            'species_tilt_angle',
+                            'species_text_ordinate',
+                            'abscissa_label_ordinate'
+                           ]
+key_with_bool_values = [
+                            'show_all_borders'
+    ]
+key_with_str_values = ['text_font',
+                       'species_text_weight',
+                       'label_text_weight']
+key_with_float_list_values = [ 'line_widths',
                                'plot_size', 
                                'plot_range' ]
 
@@ -32,6 +38,10 @@ text_styles_keys = ['general_text_size',
                     'title_text_size', 
                     'axis_text_size', 
                     'species_text_size', 
+                    'species_text_ordinate',
+                    'abscissa_label_ordinate',
+                    'label_text_weight',
+                    'species_text_weight',
                     'text_font']
 data_display_styles_keys = ['lm_length', 
                             'ts_length', 
@@ -53,9 +63,9 @@ class Styles:
                  title_text_size: float=12.0,
                  axis_text_size: float=10.0,
                  species_text_size: float=10.0,
-                 species_text_ordinate: float=-0.5, # the ordinate value for the species names
+                 species_text_ordinate: float=-0.1, # the ordinate value for the species names
                                                     # relative to the minimum of plot range
-                 abscissa_label_ordinate: float=-2.0, # the ordinate value for the abscissa label
+                 abscissa_label_ordinate: float=-0.2, # the ordinate value for the abscissa label
                  text_font: str='Arial', 
                 # --- data display styles ---
                  lm_line_length: float=1.0, 
@@ -86,6 +96,7 @@ class Styles:
         self.text_styles['species_text_ordinate'] = species_text_ordinate
         self.text_styles['abscissa_label_ordinate'] = abscissa_label_ordinate
         self.text_styles['text_font'] = text_font
+        self.text_styles['species_text_weight'] = 'normal'  # default weight for species names
 
         self.data_display_styles['lm_length'] = lm_line_length
         self.data_display_styles['ts_length'] = ts_line_length
@@ -105,6 +116,11 @@ class Styles:
                     raise ValueError(f"Invalid value for {name}: {value}. Expected a positive float.")
             except ValueError:
                 raise ValueError(f"Invalid value for {name}: {value}. Expected a positive float.")
+        elif name in key_with_float_values:
+            try:
+                converted_value = float(value)
+            except ValueError:
+                raise ValueError(f"Invalid value for {name}: {value}. Expected a float.")
         elif name in key_with_str_list:
             if isinstance(value, str):
                 converted_value = [v.strip() for v in value.split()]
@@ -124,8 +140,8 @@ class Styles:
             converted_value = value
             print(f"value after conversion: {converted_value}")
         else:
-            print(f"current name: {name}")
-            raise f"Invalid key: {name}"
+            print(f"current name: |{name}|")
+            raise ValueError(f"Invalid key: {name}")
 
         if name in line_style_keys:
             self.line_styles[name] = converted_value
