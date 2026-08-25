@@ -36,6 +36,7 @@ def input_reader(input_file_path):
         'abscissa_label': None,
         'title': None
     }
+
     with open(input_file_path, 'r') as file:
         for line in file:
             line = line.strip()

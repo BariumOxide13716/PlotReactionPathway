@@ -1,22 +1,26 @@
 # datafile
-data_file=my_path.csv
+data_file=energies.csv
 
 # figure file for outputting
 output_file=my_plot.png
 
 # texts
-abscissa_label="reaction coordinate"
-ordinate_label="energy (kcal/mol)"
-title="my_reaction_pathway"
+abscissa_label=reaction coordinate
+ordinate_label=energy (kcal/mol)
+title=my_reaction_pathway
 
 # line styles
-# omitted
+# omitteid
+line_colors=blue
 
 # figure_styles
 # omitted
+plot_dimension = 10, 10
+plot_range = 0, 1
+interval = 0.2
 
 # text styles
-# omitted
-
+#species_text_weight=bold
+text_font = DejaVu Serif
 # data display styles
 # omitted

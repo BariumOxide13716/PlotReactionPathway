@@ -3,7 +3,7 @@ This is a class for the parameters of styles in the plot for reaction pathways.
 """
 
 key_with_str_list = ['line_colors']
-key_with_positive_float_values = ['line_widths',
+key_with_positive_float_values = [
                                   'interval',
                                   'general_text_size',
                                   'title_text_size',
@@ -14,15 +14,18 @@ key_with_positive_float_values = ['line_widths',
                                   'line_separation', 
                                   'species_tilt_angle',
                                   'species_text_ordinate',
-                                  'abscissa_label_ordinate',]
+                                  'abscissa_label_ordinate'
+                                  ]
 key_with_bool_values = ['show_all_borders']
 key_with_str_values = ['text_font']
-key_with_float_list_values = ['plot_size', 
-                              'plot_range']
+key_with_float_list_values = [ 'line_widths'
+                               'plot_size', 
+                               'plot_range' ]
 
-line_style_keys = ['color', 'width']
+line_style_keys = ['line_colors', 
+                    'line_widths']
 figure_style_keys = ['show_all_borders', 
-                     'plot_dimension', 
+                     'plot_size', 
                      'plot_range', 
                      'interval']
 text_styles_keys = ['general_text_size', 
@@ -39,7 +42,7 @@ class Styles:
     def __init__(self,
                 # --- line styles ---
                  line_colors: list[str]=['black'],
-                 line_widths: float=2.0,
+                 line_widths: list[float] = [2.0],
                 # --- figure styles ---
                  show_all_borders: bool=True,
                  plot_size: list[float]=[8.0, 6.0],
@@ -68,11 +71,11 @@ class Styles:
 
 
 
-        self.line_styles['color'] = line_colors
-        self.line_styles['width'] = line_widths
+        self.line_styles['line_colors'] = line_colors
+        self.line_styles['line_widths'] = line_widths
 
         self.figure_styles['show_all_borders'] = show_all_borders
-        self.figure_styles['plot_dimension'] = plot_size
+        self.figure_styles['plot_size'] = plot_size
         self.figure_styles['plot_range'] = plot_range
         self.figure_styles['interval'] = interval
 
@@ -89,7 +92,7 @@ class Styles:
         self.data_display_styles['separation'] = line_separation
         self.data_display_styles['species_tilt_angle'] = species_tilt_angle
 
-    def __setattr__(self, name, value):
+    def set_value(self, name, value):
         if name in key_with_bool_values:
             try:
                 converted_value = bool(value)
@@ -116,6 +119,13 @@ class Styles:
                 converted_value = [float(v) for v in value]
             else:
                 raise ValueError(f"Invalid value for {name}: {value}. Expected a string or a list of floats.")
+        elif name in key_with_str_values:
+            print(f"value before conversion: {value}")
+            converted_value = value
+            print(f"value after conversion: {converted_value}")
+        else:
+            print(f"current name: {name}")
+            raise f"Invalid key: {name}"
 
         if name in line_style_keys:
             self.line_styles[name] = converted_value
